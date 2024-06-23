@@ -2,8 +2,8 @@ package cli
 
 import (
     "fmt"
-    "net/http"
     "io/ioutil"
+    "net/http"
     "github.com/spf13/cobra"
 )
 
@@ -11,6 +11,12 @@ var rootCmd = &cobra.Command{
     Use:   "go-cli-sample",
     Short: "A simple CLI tool",
     Run: func(cmd *cobra.Command, args []string) {
+        token, err := ioutil.ReadFile("auth_token.txt")
+        if err != nil || len(token) == 0 {
+            fmt.Println("Error: You must authenticate first. Run 'go-cli-sample auth' command.")
+            return
+        }
+
         response, err := http.Get("http://localhost:8080/hello")
         if err != nil {
             fmt.Println("Error:", err)
